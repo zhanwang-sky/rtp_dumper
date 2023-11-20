@@ -1,5 +1,3 @@
-package.prepend_path("/Applications/Wireshark.app/Contents/Resources/share/wireshark/rtp_dumper")
-
 jitterBuffer = require("jitter_buffer")
 
 h264Dumper = {}
