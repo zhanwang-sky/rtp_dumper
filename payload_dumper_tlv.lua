@@ -56,30 +56,19 @@ do
                     local rtp_ts = field_rtp_ts.value
                     local captuer_ts = math.floor(pinfo.abs_ts * 1000)
                     local rtp_payload = field_rtp_payload.value:raw()
-                    local total_len = rtp_payload:len() + 15
+                    local total_len = rtp_payload:len() + 17
 
                     local tlv = ''
                     -- length (little endian)
-                    tlv = tlv .. string.char(total_len % 256); total_len = total_len / 256
-                    tlv = tlv .. string.char(total_len % 256)
+                    tlv = tlv .. string.pack("<I2", total_len)
                     -- Marker
                     tlv = tlv .. string.char(rtp_marker and 1 or 0)
                     -- seq (little endian)
-                    local tmp_seq = rtp_seq
-                    tlv = tlv .. string.char(tmp_seq % 256); tmp_seq = tmp_seq / 256
-                    tlv = tlv .. string.char(tmp_seq % 256)
+                    tlv = tlv .. string.pack("<I2", rtp_seq)
                     -- timestamp (little endian)
-                    tlv = tlv .. string.char(rtp_ts % 256); rtp_ts = rtp_ts / 256
-                    tlv = tlv .. string.char(rtp_ts % 256); rtp_ts = rtp_ts / 256
-                    tlv = tlv .. string.char(rtp_ts % 256); rtp_ts = rtp_ts / 256
-                    tlv = tlv .. string.char(rtp_ts % 256)
+                    tlv = tlv .. string.pack("<I4", rtp_ts)
                     -- timestamp_ms (little endian)
-                    tlv = tlv .. string.char(captuer_ts % 256); captuer_ts = captuer_ts / 256
-                    tlv = tlv .. string.char(captuer_ts % 256); captuer_ts = captuer_ts / 256
-                    tlv = tlv .. string.char(captuer_ts % 256); captuer_ts = captuer_ts / 256
-                    tlv = tlv .. string.char(captuer_ts % 256); captuer_ts = captuer_ts / 256
-                    tlv = tlv .. string.char(captuer_ts % 256); captuer_ts = captuer_ts / 256
-                    tlv = tlv .. string.char(captuer_ts % 256)
+                    tlv = tlv .. string.pack("<I8", captuer_ts)
                     -- body
                     tlv = tlv .. rtp_payload
 
